@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monkey.mapper.RoleMapper">
+
+	<!-- 分页查询角色 -->
+	<select id="findByPage" resultType="hashmap">
+		select * from t_role r
+		<where>
+			<if test="keyword != null and keyword != ''">
+				and r.roleName like concat("%", #{keyword}, "%")
+			</if>
+		</where>
+		limit #{pu.index},#{pu.pageSize}
+	</select>
+	
+	<!-- 统计角色总数量 -->
+	<select id="total" resultType="long">
+		select count(*) from t_role r
+		<where>
+			<if test="keyword != null and keyword != ''">
+				and r.roleName like concat("%", #{keyword}, "%")
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询所有 -->
+	<select id="findAll" resultMap="roleMap">
+		select * from t_role
+	</select>
+	
+	<!-- 通过主键获取 -->
+	<select id="findById" resultMap="roleMap">
+		select * from t_role where dbid = #{id}
+	</select>
+	
+	<!-- 更新 -->
+	<update id="update">
+		update t_role set roleName = #{roleName} where dbid = #{id}
+	</update>
+	
+	<!-- 通过角色名称获取 -->
+	<select id="findByRoleName" resultMap="roleMap">
+		select * from t_role where roleName = #{roleName}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="add">
+		insert into t_role (dbid, roleName) values (null, #{roleName})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete">
+		delete from t_role where dbid = #{id}
+	</delete>
+	
+	<!-- 通过ID列表获取 -->
+	<select id="findByIds" resultMap="roleMap">
+		select * from t_role where dbid in 
+		<foreach collection="ids" open="(" item="id" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<!-- 结果集映射 -->
+	<resultMap type="com.monkey.vo.Role" id="roleMap">
+		<id column="dbid" property="id" />
+		<result column="roleName" property="roleName" />
+	</resultMap>
+
+</mapper>

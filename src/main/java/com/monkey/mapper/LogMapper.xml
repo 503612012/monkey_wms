@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monkey.mapper.LogMapper">
+
+	<!-- 添加 -->
+	<insert id="add">
+		INSERT INTO `t_log`
+		            (`dbid`,
+		             `title`,
+		             `content`,
+		             `userId`,
+		             `userName`,
+		             `dateTime`,
+		             `ip`)
+		VALUES (null,
+		        #{title},
+		        #{content},
+		        #{userId},
+		        #{userName},
+		        #{dateTime},
+		        #{ip})
+	</insert>
+
+	<!-- 结果集映射 -->
+	<resultMap type="com.monkey.vo.Log" id="logMap">
+		<id column="dbid" property="id" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="userId" property="userId" />
+		<result column="userName" property="userName" />
+		<result column="dateTime" property="dateTime" />
+		<result column="ip" property="ip" />
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monkey.mapper.MenuMapper">
+
+	<!-- 添加 -->
+	<insert id="add">
+		INSERT INTO `t_menu`
+		            (`dbid`,
+		             `menuCode`,
+		             `menuName`,
+		             `roleId`,
+		             `pid`,
+		             `sort`,
+		             `url`,
+		             `iconCls`,
+		             `type`)
+		VALUES (null,
+		        #{menuCode},
+		        #{menuName},
+		        #{roleId},
+		        #{pid},
+		        #{sort},
+		        #{url},
+		        #{iconCls},
+		        #{type})
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update">
+		UPDATE `t_menu`
+		SET `menuCode` = #{menuCode},
+		    `menuName` = #{menuName},
+		    `roleId` = #{roleId},
+		    `pid` = #{pid},
+		    `sort` = #{sort},
+		    `url` = #{url},
+		    `iconCls` = #{iconCls},
+		    `type` = #{type}
+		WHERE `dbid` = #{id}
+	</update>
+	
+	<!-- 获取一个目录的所有子目录 -->
+	<select id="getChildrenByPid" resultMap="menuMap">
+		select * from t_menu where pid = #{id}
+		<if test="roleId != null">
+			and find_in_set(#{roleId}, roleId) > 0
+		</if>
+		<if test="type != null">
+			and `type` = #{type}
+		</if>
+	</select>
+	
+	<!-- 判断某个角色是否拥有某个目录权限 -->
+	<select id="hasPermission" resultType="int">
+		select count(*) from t_menu where dbid = #{menuId} 
+		and find_in_set(#{roleId}, `roleId`) > 0
+	</select>
+	
+	<!-- 通过目录编码查询 -->
+	<select id="findByMenuCode" resultMap="menuMap">
+		select * from t_menu where menuCode = #{menuCode}
+	</select>
+	
+	<!-- 查询一个角色的权限 -->
+	<select id="findPermissionByRoleId" resultType="string">
+		select menuCode from t_menu m where find_in_set(#{roleId}, m.`roleId`)
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="findAll" resultMap="menuMap">
+		select * from t_menu
+	</select>
+
+	<!-- 结果集映射 -->
+	<resultMap type="com.monkey.vo.Menu" id="menuMap">
+		<id column="dbid" property="id" />
+		<result column="menuCode" property="menuCode" />
+		<result column="menuName" property="menuName" />
+		<result column="roldId" property="roldId" />
+		<result column="pid" property="pid" />
+		<result column="sort" property="sort" />
+		<result column="url" property="url" />
+		<result column="iconCls" property="iconCls" />
+		<result column="type" property="type" />
+	</resultMap>
+
+</mapper>

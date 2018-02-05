@@ -1,0 +1,26 @@
+.box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.box .error_code {
+	display: flex;
+	justify-content: center;
+	width: 500px;
+	height: 300px;
+}
+
+.box .error_code span {
+	font-size: 200px;
+	font-family: fantasy;
+}
+
+.box .error_msg {
+	font-size: 27px;
+}
+
+.box .error_msg span {
+	font-weight: bold;
+	color: red;
+}
